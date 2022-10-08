@@ -9,6 +9,7 @@ class User extends Sequelize.Model {
       return super.init(
          {  // 첫번째 객체 인수는 테이블 필드에 대한 설정
             userId: {
+               primaryKey: true,
                type: Sequelize.STRING(30),
                allowNull: false,
                unique: true,
@@ -26,51 +27,31 @@ class User extends Sequelize.Model {
                allowNull: true,
             },
             age: {
-               type: Sequelize.SMALLINT,
+               type: Sequelize.TINYINT,
                validate: {
                 min: 1
             },
             
                allowNull: false,
             },
-            authCode: {
-               type: Sequelize.STRING(8),
+            gender: {
+               type: Sequelize.STRING(10),
+               allowNull: false,
+            },
+            name: {
+               type: Sequelize.STRING(40),
+               allowNull: false,
+            },
+            photoUrl: {
+               type: Sequelize.STRING(250),
                allowNull: true,
             },
-            authCode: {
-               type: Sequelize.STRING(8),
-               allowNull: true,
+            status: {
+               type: Sequelize.STRING(10),
+               allowNull: false,
             },
-            authCode: {
-               type: Sequelize.STRING(8),
-               allowNull: true,
-            },
-            authCode: {
-               type: Sequelize.STRING(8),
-               allowNull: true,
-            },
-            authCode: {
-               type: Sequelize.STRING(8),
-               allowNull: true,
-            },
-            authCode: {
-               type: Sequelize.STRING(8),
-               allowNull: true,
-            },
-            authCode: {
-               type: Sequelize.STRING(8),
-               allowNull: true,
-            },
-            authCode: {
-               type: Sequelize.STRING(8),
-               allowNull: true,
-            },
-            authCode: {
-               type: Sequelize.STRING(8),
-               allowNull: true,
-            },
-            authCode: {
-               type: Sequelize.STRING(8),
+            profileMessage: {
+               type: Sequelize.STRING(100),
                allowNull: true,
             },
             
@@ -92,26 +73,10 @@ class User extends Sequelize.Model {
    static associate(db) { // 인자로 index.js에서 만든 여러 테이블이 저장되어있는 db객체를 받을 것이다.
       
     db.User.hasMany(db.Post);
-    db.User.belongsToMany(db.User, {
-      foreignKey: 'followingId',
-      as: 'Followers',
-      through: 'Follow',
-    });
-    db.User.belongsToMany(db.User, {
-      foreignKey: 'followerId',
-      as: 'Followings',
-      through: 'Follow',
-    });
-    db.User.belongsToMany(db.Post, {
-        foreignKey: 'likeUserId',
-        as: 'LikePosts',
-        through: 'Like'
-      });
-    db.User.belongsToMany(db.Post, {
-        foreignKey: 'commentedUserId',
-        as: 'CommentedPosts',
-        through: 'Comment'
-      })
+    db.User.hasMany(db.AttendList);
+    db.User.hasMany(db.Comment);
+    db.User.hasMany(db.Friend,{ foreignKey: 'user1', sourceKey: 'userId'});  // 이런식의 표현이 되는 지 모르겠네요?
+    db.User.hasMany(db.Friend,{ foreignKey: 'user2', sourceKey: 'userId'});
    }
 };
  
