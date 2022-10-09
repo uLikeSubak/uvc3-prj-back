@@ -47,7 +47,7 @@ class Post extends Sequelize.Model {
             underscored: false, /* 카멜 표기법을 스네이크 표기법으로 바꾸는 옵션 */
             modelName: 'Post', /* 모델 이름을 설정. */
             tableName: 'posts', /* 데이터베이스의 테이블 이름. */
-            paranoid: true, /* true : deletedAt이라는 컬럼이 생기고 지운 시각이 기록된다. */
+            paranoid: false, /* true : deletedAt이라는 컬럼이 생기고 지운 시각이 기록된다. */
             charset: 'utf8', /* 인코딩 */
             collate: 'utf8_general_ci'
          }
