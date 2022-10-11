@@ -1,14 +1,15 @@
 const express = require('express');
 const session = require('express-session');
 // const passport = require('passport');
-const dotenv = require("dotenv");
-const morgan = require("morgan");
-const path = require("path");
+const dotenv = require('dotenv');
+const morgan = require('morgan');
+const path = require('path');
 // const passportConfig = require('./passport')
-const { sequelize } = require("./models");
+const { sequelize } = require('./models');
 
 const app = express();
 
+const authRouter = require('./routes/auth.js')
 
 
 
@@ -47,6 +48,8 @@ app.use(session({
 
 // app.use(passport.initialize());
 // app.use(passport.session());  
+
+app.use('/auth', authRouter);
 
 
 

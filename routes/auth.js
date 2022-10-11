@@ -33,10 +33,10 @@ router.post('/signUp', async(req, res, next)=>{
       profileMessage,
     });
     // 유저정보가 성공적으로 만들어졌다면 201(Created)
-    res.sendStatus(201);
+    return res.sendStatus(201);
   } catch (error) {
     // 유저 정보 생성에 필요한 정보가 제대로 오지 않았다면 400(Bad Request)
-    res.sendStatus(400);
+    return res.sendStatus(400);
   }
 })
 
@@ -49,14 +49,14 @@ router.get('/email/:id', async(req, res, next)=>{
     // isDupEmail : 입력한 이메일이 db에 있으면 값이 담긴다.
     if(isDupEmail){
       // 중복된 이메일이 있으면 400(Bad Request)
-      res.sendStatus(400);
+      return res.sendStatus(400);
     }else{
       // 중복된 이메일이 없다면 200(Request Success)
-      res.sendStatus(200);
+      return res.sendStatus(200);
     }
   } catch (error) {
     // 에러는 전부 404 (Not Found) 처리를 할까요?
-    res.sendStatus(404);
+    return res.sendStatus(404);
   }
 })
 
@@ -69,13 +69,13 @@ router.get('/userId/:id', async(req, res, next)=>{
     // isDupUserId : 입력한 닉네임(Id)이 db에 있으면 값이 담긴다.
     if(isDupUserId){
       // 중복된 닉네임(ID)이 있으면 400(Bad Request)
-      res.sendStatus(400);
+      return res.sendStatus(400);
     }else{
       // 중복된 닉네임(ID)이 없다면 200(Request Success)
-      res.sendStatus(200);
+      return res.sendStatus(200);
     }
   } catch (error) {
-    res.sendStatus(404);
+    return res.sendStatus(404);
   }
 })
 
@@ -87,7 +87,7 @@ router.post('/signIn', async(req, res, next)=>{
   try {
     // 클라이언트가 입력한 ID의 유효성 체크
     if(!validId){
-    res.sendStatus(404);
+    return res.sendStatus(404);
     }
     // 클라이언트가 입력한 pw와 db에 저장된 암호화된 비밀번호를 비교 후 일치하면 값이 담김.
     const validPassword = await bcrypt.compare(password, validId.password)
@@ -105,9 +105,11 @@ router.post('/signIn', async(req, res, next)=>{
       });
     }else{
       // 비밀번호 불일치 400(Bad Request)
-      res.sendStatus(400);
+      return res.sendStatus(400);
     }
   } catch (error) {
-    res.sendStatus(404);   
+    return res.sendStatus(404);   
   }
  })
+
+ module.exports = router;
