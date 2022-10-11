@@ -8,7 +8,6 @@ class User extends Sequelize.Model {
       {
         // 첫번째 객체 인수는 테이블 필드에 대한 설정
         userId: {
-          primaryKey: true,
           type: Sequelize.STRING(30),
           allowNull: false,
           unique: true,
@@ -23,10 +22,10 @@ class User extends Sequelize.Model {
           unique: true, // *고유값이므로 unique로 추가
         },
         // *이메일인증은 안하기로 했으므로 필요없는 부분
-        // authCode: {
-        //    type: Sequelize.STRING(8),
-        //    allowNull: true,
-        // },
+        authCode: {
+          type: Sequelize.STRING(8),
+          allowNull: true,
+        },
         age: {
           type: Sequelize.TINYINT,
           validate: {
