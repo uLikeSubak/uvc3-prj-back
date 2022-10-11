@@ -9,6 +9,8 @@ const { sequelize } = require('./models');
 const cors = require('cors');
 const corsConfig = require('./config/corsConfig.json');
 // const logger = require('./lib/logger');
+
+
 const app = express();
 
 const authRouter = require('./routes/auth.js')
@@ -24,6 +26,8 @@ dotenv.config();
 // .env에 포트 설정
 app.set('port', process.env.PORT)
 
+
+//cors설정
 app.use(morgan('dev'));
 
 app.use(express.json());
