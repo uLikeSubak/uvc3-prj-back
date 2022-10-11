@@ -21,11 +21,6 @@ class User extends Sequelize.Model {
           allowNull: false,
           unique: true, // *고유값이므로 unique로 추가
         },
-        // *이메일인증은 안하기로 했으므로 필요없는 부분
-        authCode: {
-          type: Sequelize.STRING(8),
-          allowNull: true,
-        },
         age: {
           type: Sequelize.TINYINT,
           validate: {
@@ -45,11 +40,6 @@ class User extends Sequelize.Model {
           type: Sequelize.STRING(250),
           allowNull: true,
           defaultValue: "no-photo.jpg", // *사진첨부를 안할 경우 디폴트경로 설정
-        },
-        status: {
-          type: Sequelize.STRING(10),
-          allowNull: false,
-          defaultValue: "pending", //*초기 디폴트값을 pending으로 설정
         },
         profileMessage: {
           type: Sequelize.STRING(100),
@@ -77,8 +67,8 @@ class User extends Sequelize.Model {
     db.User.hasMany(db.Post);
     db.User.hasMany(db.AttendList);
     db.User.hasMany(db.Comment);
-    db.User.hasMany(db.Friend, { foreignKey: "user1", sourceKey: "userId" }); // 이런식의 표현이 되는 지 모르겠네요?
-    db.User.hasMany(db.Friend, { foreignKey: "user2", sourceKey: "userId" });
+    db.User.hasMany(db.Friend, { foreignKey: "reqUserId", sourceKey: "id" }); // 이런식의 표현이 되는 지 모르겠네요?
+    db.User.hasMany(db.Friend, { foreignKey: "resUserId", sourceKey: "id" });
   }
 }
 
