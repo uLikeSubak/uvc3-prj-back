@@ -13,26 +13,8 @@ const { verifyToken } = require('./middlewares');
 
 // 식사 eat / 운동 exercise / 스터디 study / 공구 buy / 재능기부 talent
 
-
-// 카테고리: 식사 eat
-// GET으로 eat게시글 조회
-router.get('/eat', verifyToken, async (req, res) => {
-  try {
-    const posts = await Post.findAll({
-      where: { CategoryTitle: 'eat' },
-      order: [['createdAt', 'DESC']],
-    });
-    return res.status(200).json({
-      posts
-    });
-  } catch (error) {
-    return res.sendStatus(500);
-  };
-});
-
-// 카테고리: 식사 eat
 // POST으로 eat게시글 작성
-router.post('/eat', verifyToken, async (req, res) => {
+router.post('/', verifyToken, async (req, res) => {
   try {
     const post = await Post.create({
       title: req.body.title,
@@ -45,13 +27,32 @@ router.post('/eat', verifyToken, async (req, res) => {
       time: req.body.time,
       visibility: req.body.visibility,
       UserId: req.decoded.id,
-      CategoryTitle: 'eat',
+      CategoryId: req.body.CategoryId,
     });
     return res.sendStatus(201)
   } catch (error) {
     return res.sendStatus(500)
   }
 });
+
+
+// 카테고리: 식사 eat
+// GET으로 eat게시글 조회
+router.get('/eat', verifyToken, async (req, res) => {
+  console.log('no?')
+  try {
+    const posts = await Post.findAll({
+      where: { CategoryId: 1 },
+      order: [['createdAt', 'DESC']],
+    });
+    return res.status(200).json({
+      posts
+    });
+  } catch (error) {
+    return res.sendStatus(500);
+  };
+});
+
 
 // 카테고리: 식사 eat
 // PATCH로 eat게시글 수정 (단, 유저가 쓴 것만)
@@ -93,7 +94,7 @@ router.delete('/eat/:id', verifyToken, async (req, res) => {
 router.get('/exercise', verifyToken, async (req, res) => {
   try {
     const posts = await Post.findAll({
-      where: { CategoryTitle: 'exercise' },
+      where: { CategoryId: '2' },
       order: [['createdAt', 'DESC']],
     });
     return res.status(200).json({
@@ -104,28 +105,6 @@ router.get('/exercise', verifyToken, async (req, res) => {
   };
 });
 
-// 카테고리: 운동 exercise
-// POST으로 exercise게시글 작성
-router.post('/exercise', verifyToken, async (req, res) => {
-  try {
-    const post = await Post.create({
-      title: req.body.title,
-      content: req.body.content,
-      region: req.body.region,
-      address: req.body.address,
-      cost: req.body.cost,
-      capacity: req.body.capacity,
-      date: req.body.date,
-      time: req.body.time,
-      visibility: req.body.visibility,
-      UserId: req.decoded.id,
-      CategoryTitle: 'eat',
-    });
-    return res.sendStatus(201)
-  } catch (error) {
-    return res.sendStatus(500)
-  }
-});
 
 // 카테고리: 운동 exercise
 // PATCH로 exercise게시글 수정 (단, 유저가 쓴 것만)
@@ -166,7 +145,7 @@ router.delete('/exercise/:id', verifyToken, async (req, res) => {
 router.get('/study', verifyToken, async (req, res) => {
   try {
     const posts = await Post.findAll({
-      where: { CategoryTitle: 'study' },
+      where: { CategorId: 3 },
       order: [['createdAt', 'DESC']],
     });
     return res.status(200).json({
@@ -177,28 +156,6 @@ router.get('/study', verifyToken, async (req, res) => {
   };
 });
 
-// 카테고리: 스터디 study
-// POST으로 study게시글 작성
-router.post('/study', verifyToken, async (req, res) => {
-  try {
-    const post = await Post.create({
-      title: req.body.title,
-      content: req.body.content,
-      region: req.body.region,
-      address: req.body.address,
-      cost: req.body.cost,
-      capacity: req.body.capacity,
-      date: req.body.date,
-      time: req.body.time,
-      visibility: req.body.visibility,
-      UserId: req.decoded.id,
-      CategoryTitle: 'eat',
-    });
-    return res.sendStatus(201)
-  } catch (error) {
-    return res.sendStatus(500)
-  }
-});
 
 // 카테고리: 스터디 study
 // PATCH로 study게시글 수정 (단, 유저가 쓴 것만)
@@ -240,7 +197,7 @@ router.delete('/study/:id', verifyToken, async (req, res) => {
 router.get('/buy', verifyToken, async (req, res) => {
   try {
     const posts = await Post.findAll({
-      where: { CategoryTitle: 'buy' },
+      where: { CategoryId: 4 },
       order: [['createdAt', 'DESC']],
     });
     return res.status(200).json({
@@ -251,28 +208,6 @@ router.get('/buy', verifyToken, async (req, res) => {
   };
 });
 
-// 카테고리: 공구 buy
-// POST으로 buy게시글 작성
-router.post('/buy', verifyToken, async (req, res) => {
-  try {
-    const post = await Post.create({
-      title: req.body.title,
-      content: req.body.content,
-      region: req.body.region,
-      address: req.body.address,
-      cost: req.body.cost,
-      capacity: req.body.capacity,
-      date: req.body.date,
-      time: req.body.time,
-      visibility: req.body.visibility,
-      UserId: req.decoded.id,
-      CategoryTitle: 'eat',
-    });
-    return res.sendStatus(201)
-  } catch (error) {
-    return res.sendStatus(500)
-  }
-});
 
 // 카테고리: 공구 buy
 // PATCH로 buy게시글 수정 (단, 유저가 쓴 것만)
@@ -314,7 +249,7 @@ router.delete('/buy/:id', verifyToken, async (req, res) => {
 router.get('/talent', verifyToken, async (req, res) => {
   try {
     const posts = await Post.findAll({
-      where: { CategoryTitle: 'talent' },
+      where: { CategoryId: 5 },
       order: [['createdAt', 'DESC']],
     });
     return res.status(200).json({
@@ -325,28 +260,6 @@ router.get('/talent', verifyToken, async (req, res) => {
   };
 });
 
-// 카테고리: 재능기부 talent
-// POST으로 talent게시글 작성
-router.post('/talent', verifyToken, async (req, res) => {
-  try {
-    const post = await Post.create({
-      title: req.body.title,
-      content: req.body.content,
-      region: req.body.region,
-      address: req.body.address,
-      cost: req.body.cost,
-      capacity: req.body.capacity,
-      date: req.body.date,
-      time: req.body.time,
-      visibility: req.body.visibility,
-      UserId: req.decoded.id,
-      CategoryTitle: 'eat',
-    });
-    return res.sendStatus(201)
-  } catch (error) {
-    return res.sendStatus(500)
-  }
-});
 
 // 카테고리: 재능기부 talent
 // PATCH로 talent게시글 수정 (단, 유저가 쓴 것만)

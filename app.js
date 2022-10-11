@@ -6,7 +6,9 @@ const morgan = require('morgan');
 const path = require('path');
 // const passportConfig = require('./passport')
 const { sequelize } = require('./models');
-
+const cors = require('cors');
+const corsConfig = require('./config/corsConfig.json');
+// const logger = require('./lib/logger');
 const app = express();
 
 const authRouter = require('./routes/auth.js')
@@ -29,6 +31,8 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use('/', express.static(path.join(__dirname, 'public')));
 app.use('/img', express.static(path.join(__dirname, 'uploads')))
+
+app.use(cors(corsConfig));
 
 // app.use(session({
 //     resave: false,
