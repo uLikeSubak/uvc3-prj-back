@@ -18,7 +18,6 @@ const commentRouter = require('./routes/comment.js')
 const categoryRouter = require('./routes/category.js')
 
 
-
 dotenv.config();
 // passportConfig()
 
