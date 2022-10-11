@@ -10,6 +10,7 @@ const { sequelize } = require('./models');
 const app = express();
 
 const authRouter = require('./routes/auth.js')
+const profileRouter = require('./routes/profile.js')
 
 
 
@@ -50,6 +51,7 @@ sequelize.sync({ force: false })
 // app.use(passport.session());  
 
 app.use('/auth', authRouter);
+app.use('/profile', profileRouter);
 
 
 
