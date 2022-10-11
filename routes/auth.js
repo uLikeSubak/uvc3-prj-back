@@ -16,41 +16,43 @@ const User = require('../models/user');
 
 
 
-// 화원가입 api 
-router.post('/signUp', async(req, res, next)=>{
-  const { name, userId, password, email, authCode, age, gender, photoUrl, status, profileMessage } = req.body;
+// 화원가입 api
+router.post('/signUp', async (req, res) => {
+  const { name, email, userId, password, age, gender, photoUrl, profileMessage } = req.body;
   try {
     // 비밀번호 암호화 
     const hash = await bcrypt.hash(password, 12);
     // 간단하게 회원가입 구현이라 email, authCode, status는 제외 했습니다.
     await User.create({
       name,
+      email,
       userId,
       password: hash,
       age,
       gender,
       photoUrl,
-      profileMessage,
+      profileMessage
     });
     // 유저정보가 성공적으로 만들어졌다면 201(Created)
     return res.sendStatus(201);
   } catch (error) {
     // 유저 정보 생성에 필요한 정보가 제대로 오지 않았다면 400(Bad Request)
+    // console.log('what is wrong');
     return res.sendStatus(400);
   }
 })
 
 
-// 이메일 중복확인  // 라우터명 emailDupChk/:id로 할까요 그냥 emaiil/:id로 할까요?
+// 회원가입 시 이메일 중복확인
 // 라우터 주소 형식을 어떤 식으로 할 지 얘기를 한 번 해봐야할 거 같습니다.
-router.get('/email/:id', async(req, res, next)=>{   
+router.get('/emailChk/:id', async (req, res) => {
   try {
-    const isDupEmail = await User.findOne({where:{email: req.params.id}});
+    const isDupEmail = await User.findOne({ where: { email: req.params.id } });
     // isDupEmail : 입력한 이메일이 db에 있으면 값이 담긴다.
-    if(isDupEmail){
+    if (isDupEmail) {
       // 중복된 이메일이 있으면 400(Bad Request)
       return res.sendStatus(400);
-    }else{
+    } else {
       // 중복된 이메일이 없다면 200(Request Success)
       return res.sendStatus(200);
     }
@@ -62,15 +64,15 @@ router.get('/email/:id', async(req, res, next)=>{
 
 
 
-// 닉네임 겸 ID 중복확인
-router.get('/userId/:id', async(req, res, next)=>{   
+// 회원가입 시 닉네임 겸 ID 중복확인
+router.get('/userIdChk/:id', async (req, res) => {
   try {
-    const isDupUserId = await User.findOne({where:{userId: req.params.id}});
+    const isDupUserId = await User.findOne({ where: { userId: req.params.id } });
     // isDupUserId : 입력한 닉네임(Id)이 db에 있으면 값이 담긴다.
-    if(isDupUserId){
+    if (isDupUserId) {
       // 중복된 닉네임(ID)이 있으면 400(Bad Request)
       return res.sendStatus(400);
-    }else{
+    } else {
       // 중복된 닉네임(ID)이 없다면 200(Request Success)
       return res.sendStatus(200);
     }
@@ -81,17 +83,17 @@ router.get('/userId/:id', async(req, res, next)=>{
 
 
 // 로그인 api
-router.post('/signIn', async(req, res, next)=>{
-  const { userId, password} = req.body;
-  const validId = await User.findOne({where:{userId}});
+router.post('/signIn', async (req, res) => {
+  const { userId, password } = req.body;
+  const validId = await User.findOne({ where: { userId } });
   try {
     // 클라이언트가 입력한 ID의 유효성 체크
-    if(!validId){
-    return res.sendStatus(404);
+    if (!validId) {
+      return res.sendStatus(404);
     }
     // 클라이언트가 입력한 pw와 db에 저장된 암호화된 비밀번호를 비교 후 일치하면 값이 담김.
     const validPassword = await bcrypt.compare(password, validId.password)
-    if(validPassword){
+    if (validPassword) {
       const token = jwt.sign({
         id: userId,
       }, process.env.JWT_SECRET, {
@@ -103,13 +105,13 @@ router.post('/signIn', async(req, res, next)=>{
         message: '토큰이 발급되었습니다',
         token,
       });
-    }else{
+    } else {
       // 비밀번호 불일치 400(Bad Request)
       return res.sendStatus(400);
     }
   } catch (error) {
-    return res.sendStatus(404);   
+    return res.sendStatus(404);
   }
- })
+})
 
- module.exports = router;
+module.exports = router;

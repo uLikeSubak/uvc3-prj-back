@@ -17,7 +17,7 @@ dotenv.config();
 // passportConfig()
 
 // .env에 포트 설정
-app.set('port', process.env.PORT) 
+app.set('port', process.env.PORT)
 
 app.use(morgan('dev'));
 
@@ -27,24 +27,24 @@ app.use(express.urlencoded({ extended: false }));
 app.use('/', express.static(path.join(__dirname, 'public')));
 app.use('/img', express.static(path.join(__dirname, 'uploads')))
 
-app.use(session({
-    resave: false,
-    saveUninitialized: false,
-    secret: process.env.COOKIE_SECRET,
-    cookie: {
-      httpOnly: true,
-      secure: false,
-    },
-  }));
+// app.use(session({
+//     resave: false,
+//     saveUninitialized: false,
+//     secret: process.env.COOKIE_SECRET,
+//     cookie: {
+//       httpOnly: true,
+//       secure: false,
+//     },
+//   }));
 
 
-  sequelize.sync({ force: false })
+sequelize.sync({ force: false })
   .then(() => {
-      console.log('데이터베이스 연결 성공')
+    console.log('데이터베이스 연결 성공')
   })
   .catch((err) => {
-      console.log(err)
-  }) 
+    console.log(err)
+  })
 
 // app.use(passport.initialize());
 // app.use(passport.session());  
@@ -54,5 +54,5 @@ app.use('/auth', authRouter);
 
 
 app.listen(app.get('port'), () => {
-    console.log(app.get('port'), '번 포트에서 대기중');
-  });
+  console.log(app.get('port'), '번 포트에서 대기중');
+});
