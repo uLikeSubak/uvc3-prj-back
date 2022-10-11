@@ -1,11 +1,11 @@
 const Sequelize = require('sequelize');
- 
+
 class Post extends Sequelize.Model {
- 
+
    // 스태틱 메소드
    // 테이블에 대한 설정
    static init(sequelize) {
- 
+
       return super.init(
          {  // 첫번째 객체 인수는 테이블 필드에 대한 설정
             title: {
@@ -25,15 +25,19 @@ class Post extends Sequelize.Model {
                allowNull: false,
             },
             cost: {
-               type: Sequelize.STRING(10),
+               type: Sequelize.INTEGER,
                allowNull: false,
             },
             capacity: {
-               type: Sequelize.STRING(3),
+               type: Sequelize.TINYINT,
                allowNull: false,
             },
             date: {
                type: Sequelize.DATE,
+               allowNull: false,
+            },
+            time: {
+               type: Sequelize.TIME,
                allowNull: false,
             },
             visibility: {
@@ -53,15 +57,15 @@ class Post extends Sequelize.Model {
          }
       );
    }
- 
+
    // 다른 모델과의 관계
    static associate(db) { // 인자로 index.js에서 만든 여러 테이블이 저장되어있는 db객체를 받을 것이다.
-      
-    db.Post.hasOne(db.Category);
-    db.Post.belongsTo(db.User);
-    db.Post.hasMany(db.Comment);
-    db.Post.hasMany(db.AttendList);
+
+      db.Post.hasOne(db.Category);
+      db.Post.belongsTo(db.User);
+      db.Post.hasMany(db.Comment);
+      db.Post.hasMany(db.AttendList);
    }
 };
- 
+
 module.exports = Post;
