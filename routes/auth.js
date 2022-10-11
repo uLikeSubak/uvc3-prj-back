@@ -96,7 +96,7 @@ router.post('/signIn', async (req, res) => {
     const validPassword = await bcrypt.compare(password, validId.password)
     if (validPassword) {
       const token = jwt.sign({
-        id: userId,
+        id: validId.id,
       }, process.env.JWT_SECRET, {
         expiresIn: '30000m', // 테스트용이여서 일단 길게 했습니다. 
         issuer: 'todaymate',

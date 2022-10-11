@@ -1,6 +1,6 @@
 // express 선언
 const express = require('express');
-const { verify } = require('jsonwebtoken');
+// const { verify } = require('jsonwebtoken');
 
 // router 선언
 const router = express.Router();
@@ -16,11 +16,12 @@ const { verifyToken } = require('./middlewares');
 router.get('/', verifyToken, async (req, res) => {
   try {
     const posts = await Post.findAll({
-      where: { userId: req.decoded.id },
       order: [['createdAt', 'DESC']],
     });
-    res.json({ posts });
-    res.sendStatus(200);
+    // res.json({ posts });
+    return res.status(200).json({
+      posts
+    });
   } catch (error) {
     return res.sendStatus(500);
   };
@@ -28,6 +29,8 @@ router.get('/', verifyToken, async (req, res) => {
 
 // POST으로 게시글 작성
 router.post('/', verifyToken, async (req, res) => {
+  console.log('test')
+  console.log(req.decoded.id)
   try {
     const post = await Post.create({
       title: req.body.title,
@@ -39,7 +42,7 @@ router.post('/', verifyToken, async (req, res) => {
       date: req.body.date,
       time: req.body.time,
       visibility: req.body.visibility,
-      userId: req.decoded.id,
+      UserId: req.decoded.id,
     });
     return res.sendStatus(201)
   } catch (error) {
@@ -61,8 +64,8 @@ router.patch('/:id', verifyToken, async (req, res) => {
       capacity: req.body.capacity,
       date: req.body.date,
       visibility: req.body.visibility,
-    }, { where: { id: req.params.id, userId: req.decoded.id } })
-    res.sendStatus(200);
+    }, { where: { id: req.params.id, UserId: req.decoded.id } })
+    return res.sendStatus(200);
   } catch (error) {
     return res.sendStatus(500);
   }
@@ -72,9 +75,11 @@ router.patch('/:id', verifyToken, async (req, res) => {
 // DELETE으로 게시글 삭제 (단, 유저가 쓴 것만)
 router.delete('/:id', verifyToken, async (req, res) => {
   try {
-    await Post.destroy({ where: { id: req.params.id, userId: req.decoded.id } })
+    await Post.destroy({ where: { id: req.params.id, UserId: req.decoded.id } })
     res.sendStatus(204);
   } catch (error) {
     return res.sendStatus(500);
   }
 })
+
+module.exports = router;
