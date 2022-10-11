@@ -12,7 +12,6 @@ const app = express();
 const authRouter = require('./routes/auth.js')
 const postRouter = require('./routes/post.js')
 const profileRouter = require('./routes/profile.js')
-const categoryRouter = require('./routes/category.js')
 
 
 
@@ -55,7 +54,6 @@ sequelize.sync({ force: false })
 app.use('/auth', authRouter);
 app.use('/post', postRouter);
 app.use('/profile', profileRouter);
-app.use('/category', categoryRouter);
 
 
 
