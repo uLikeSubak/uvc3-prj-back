@@ -1,11 +1,11 @@
 const Sequelize = require('sequelize');
- 
+
 class Category extends Sequelize.Model {
- 
+
    // 스태틱 메소드
    // 테이블에 대한 설정
    static init(sequelize) {
- 
+
       return super.init(
          {  // 첫번째 객체 인수는 테이블 필드에 대한 설정
             categoryTitle: {
@@ -26,13 +26,13 @@ class Category extends Sequelize.Model {
          }
       );
    }
- 
+
    // 다른 모델과의 관계
    static associate(db) { // 인자로 index.js에서 만든 여러 테이블이 저장되어있는 db객체를 받을 것이다.
-      
-    db.Category.belongsTo(db.Post);
-   
+
+      db.Category.hasMany(db.Post);
+
    }
 };
- 
+
 module.exports = Category;
