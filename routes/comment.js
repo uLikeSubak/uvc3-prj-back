@@ -43,11 +43,11 @@ router.post('/:id', verifyToken, async (req, res) => {
 
 // PATCH로 댓글 수정 (단, 유저가 쓴 것만)
 // router의 id는 댓글의 id
-router.patch('/:id', verifyToken, async (req, res) => {
+router.patch('/:postId/:id', verifyToken, async (req, res) => {
   try {
     await Comment.update({
       content: req.body.content,
-    }, { where: { PostId: req.params.id, UserId: req.decoded.id } })
+    }, { where: { PostId: req.params.postId, id: req.params.id, UserId: req.decoded.id } })
     return res.sendStatus(200);
   } catch (error) {
     return res.sendStatus(500);
@@ -56,9 +56,9 @@ router.patch('/:id', verifyToken, async (req, res) => {
 
 
 // DELETE으로 댓글 삭제 (단, 유저가 쓴 것만)
-router.delete('/:id', verifyToken, async (req, res) => {
+router.delete('/:postId/:id', verifyToken, async (req, res) => {
   try {
-    await Comment.destroy({ where: { PostId: req.params.id, UserId: req.decoded.id } })
+    await Comment.destroy({ where: { PostId: req.params.postId, id: req.params.id, UserId: req.decoded.id } })
     res.sendStatus(204);
   } catch (error) {
     return res.sendStatus(500);
