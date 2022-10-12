@@ -33,6 +33,66 @@ router.get('/list', verifyToken, async(req, res)=>{
   }
 })
 
+// status가 0이면서 로그인 한 유저가 포함된 것
+// 
+  router.get("/:userId/pending/", verifyToken, async(req, res)=>{
+    const iamReqUser = await Friend.findOne({
+      where:{
+        reqUserId: req.decoded.id,
+        resUserId: req.params.userId,
+        status: false,
+      }
+    })
+    const iamResUser = await Friend.findOne({
+      where:{
+        reqUserId: req.params.userId,
+        resUserId: req.decoded.id,
+        status: false,
+      }
+    })
+    try {
+        // 내가 요청자이면서 아직 친구가 아니라면  
+      if(iamReqUser){
+        return res.status(200).json({
+          message: "내가 요청 아직 상대방 수락x"
+        });
+        // 내가 응답자이면서 아직 친구가 아니라면
+      }else if(iamResUser){
+        return res.status(200).json({
+          message: "상대방 요청 내가 아직 수락x"
+        });
+      }
+    } catch (error) {
+      return res. sendStatus(404);
+    }
+  })
+
+// // status가 1이면서 로그인 한 유저가 포함된 것 
+// router.get("/:userId/status/accepted", verifyToken, async(req, res)=>{
+//   const areWeFriend1 = await Friend.findOne({
+//     where:{
+//       status: true,
+//       reqUserId: req.params.userId,
+//       resUserId: req.decoded.id,
+//     }
+//   })
+//   const areWeFriend2 = await Friend.findOne({
+//     where:{
+//       status: true,
+//       reqUserId: req.decoded.id,
+//       resUserId: req.params.userId,
+//     }
+//   })   
+//   try {
+//     if(areWeFriend1 || areWeFriend2){
+//       return res.status(200).json({
+//         message:"우린친구"
+//       })
+//     }
+//   } catch (error) {
+//     return res. sendStatus(404);
+//   }
+// })
 
 
 // 나한테 친구 요청한 사람 조회
@@ -95,7 +155,7 @@ router.patch('/:id', verifyToken, async(req, res)=>{
   }
 })
 
-// 친구 삭제
+// 친구 삭제, 거절
 
 router.delete('/:id', verifyToken, async(req, res)=>{
   try {
