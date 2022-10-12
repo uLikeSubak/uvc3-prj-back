@@ -9,6 +9,8 @@ const { sequelize } = require('./models');
 const cors = require('cors');
 const corsConfig = require('./config/corsConfig.json');
 // const logger = require('./lib/logger');
+
+
 const app = express();
 
 const authRouter = require('./routes/auth.js')
@@ -17,6 +19,7 @@ const profileRouter = require('./routes/profile.js')
 const commentRouter = require('./routes/comment.js')
 const categoryRouter = require('./routes/category.js')
 const attendRouter = require('./routes/attend.js')
+const friendRouter = require('./routes/friend.js')
 
 
 dotenv.config();
@@ -25,6 +28,8 @@ dotenv.config();
 // .env에 포트 설정
 app.set('port', process.env.PORT)
 
+
+//cors설정
 app.use(morgan('dev'));
 
 app.use(express.json());
@@ -63,6 +68,7 @@ app.use('/profile', profileRouter);
 app.use('/comment', commentRouter);
 app.use('/category', categoryRouter);
 app.use('/attend', attendRouter);
+app.use('/friend', friendRouter);
 
 
 
