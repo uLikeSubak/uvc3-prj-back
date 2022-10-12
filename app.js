@@ -19,6 +19,7 @@ const profileRouter = require('./routes/profile.js')
 const commentRouter = require('./routes/comment.js')
 const categoryRouter = require('./routes/category.js')
 const attendRouter = require('./routes/attend.js')
+const friendRouter = require('./routes/friend.js')
 
 
 dotenv.config();
@@ -67,6 +68,7 @@ app.use('/profile', profileRouter);
 app.use('/comment', commentRouter);
 app.use('/category', categoryRouter);
 app.use('/attend', attendRouter);
+app.use('/friend', friendRouter);
 
 
 
