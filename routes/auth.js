@@ -86,6 +86,7 @@ router.get('/userIdChk/:id', async (req, res) => {
 // 로그인 api
 router.post('/signIn', async (req, res) => {
   const { userId, password } = req.body;
+  console.log(userId, password);
   const validId = await User.findOne({ where: { userId } });
   try {
     // 클라이언트가 입력한 ID의 유효성 체크
