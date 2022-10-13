@@ -37,12 +37,12 @@ class User extends Sequelize.Model {
           allowNull: false,
         },
         photoUrl: {
-          type: Sequelize.STRING(250),
+          type: Sequelize.STRING,
           allowNull: true,
           defaultValue: "no-photo.jpg", // *사진첨부를 안할 경우 디폴트경로 설정
         },
         profileMessage: {
-          type: Sequelize.STRING(100),
+          type: Sequelize.STRING,
           allowNull: true,
         },
       },
