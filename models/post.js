@@ -38,7 +38,7 @@ class Post extends Sequelize.Model {
             },
             time: {
                type: Sequelize.TIME,
-               allowNull: false,
+               allowNull: true,
             },
             visibility: {
                type: Sequelize.STRING(10),
