@@ -28,7 +28,7 @@ router.post('/signUp', async (req, res) => {
       userId,
       password: hash,
       email,
-      age,
+      birthdate,
       gender,
       name,
       photoUrl,
