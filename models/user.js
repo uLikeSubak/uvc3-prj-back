@@ -21,11 +21,8 @@ class User extends Sequelize.Model {
           allowNull: false,
           unique: true, // *고유값이므로 unique로 추가
         },
-        age: {
-          type: Sequelize.TINYINT,
-          validate: {
-            min: 1,
-          },
+        birthdate: {
+          type: Sequelize.DATE,
           allowNull: false,
         },
         gender: {
