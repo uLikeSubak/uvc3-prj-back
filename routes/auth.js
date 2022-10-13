@@ -18,7 +18,8 @@ const User = require('../models/user');
 
 // 화원가입 api
 router.post('/signUp', async (req, res) => {
-  const { name, email, userId, password, age, gender, photoUrl, profileMessage } = req.body;
+  const { name, email, userId, password, birthdate, gender, photoUrl, profileMessage } = req.body;
+  console.log(req.body);
   try {
     // 비밀번호 암호화 
     const hash = await bcrypt.hash(password, 12);
@@ -28,7 +29,7 @@ router.post('/signUp', async (req, res) => {
       userId,
       password: hash,
       email,
-      age,
+      birthdate,
       gender,
       name,
       photoUrl,
@@ -36,7 +37,7 @@ router.post('/signUp', async (req, res) => {
     });
     // 유저정보가 성공적으로 만들어졌다면 201(Created)
     return res.sendStatus(201);
-  }catch (error) {
+  } catch (error) {
     // 유저 정보 생성에 필요한 정보가 제대로 오지 않았다면 400(Bad Request)
     // console.log('what is wrong');
     return res.sendStatus(400);
@@ -116,4 +117,4 @@ router.post('/signIn', async (req, res) => {
   }
 })
 
- module.exports = router;
+module.exports = router;
