@@ -15,13 +15,13 @@ const { Router } = require('express');
 
 // 내 정보 조회
 
-router.get('/my', verifyToken, async(req, res)=>{
+router.post('/my', verifyToken, async(req, res)=>{
   try {
-    console.log(req.decoded.id)
-    const myProfile = await User.findOne({where:{userId: req.decoded.id}});
-    if(myProfile){
+    console.log("요청자 아이디:",req.decoded.id)
+    const myProfile = await User.findOne({where:{id: req.decoded.id}});
+    console.log("myProfile:",myProfile);
+    if(myProfile){ 
       return res.status(200).json({
-        success: true,
         data: myProfile,
       });
     }else{
@@ -31,8 +31,8 @@ router.get('/my', verifyToken, async(req, res)=>{
     return res.sendStatus(404);
   }
 })
-
-// 타 회원 정보 조회
+  
+// 타 회원 정보 조회 
 
 router.get('/:id', verifyToken, async(req, res)=>{
   try {

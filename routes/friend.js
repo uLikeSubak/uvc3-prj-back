@@ -15,18 +15,23 @@ router.get('/list', verifyToken, async(req, res)=>{
       reqUserId: req.decoded.id,
     }
   })
+  const friendInfoList = [];
+  for(let i =0; i < friendList1.length; i++){
+    friendInfoList.push(await User.findOne({where:{id: friendList1[i].resUserId}}))
+  }
+
   const friendList2 = await Friend.findAll({
     where:{
       status: true,
       resUserId: req.decoded.id,
     }
   }) 
+  for(let i =0; i < friendList2.length; i++){
+    friendInfoList.push(await User.findOne({where:{id: friendList2[i].reqUserId}}))
+  }
   try {
-    const friendListArr = [];
-    friendListArr.push(friendList1);
-    friendListArr.push(friendList2);
     return res.status(200).json({
-      friendListArr,
+      friendInfoList,
     })
   } catch (error) {
     return res.sendStatus(404);
