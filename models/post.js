@@ -42,7 +42,7 @@ class Post extends Sequelize.Model {
             },
             visibility: {
                type: Sequelize.STRING(10),
-               allowNull: false,
+               allowNull: true,
             },
          },
          {  // 두번째 객체 인수는 테이블 자체에 대한 설정
