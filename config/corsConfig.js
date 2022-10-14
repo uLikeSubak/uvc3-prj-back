@@ -8,7 +8,7 @@ const whitelist = require('./whiteList.json');
 
 const corsConfig = {
   origin: whitelist,
-  methods: ['OPTIONS', 'GET', 'POST', 'HEAD', 'PUT', 'DELETE'],
+  methods: ['OPTIONS', 'GET', 'POST', 'HEAD', 'PATCH', 'DELETE'],
   credentials: true,
 };
 

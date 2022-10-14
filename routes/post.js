@@ -1,5 +1,6 @@
 // express 선언
 const express = require('express');
+const { reset } = require('nodemon');
 // const { verify } = require('jsonwebtoken');
 
 // router 선언
@@ -15,6 +16,7 @@ const { verifyToken } = require('./middlewares');
 
 // POST으로 eat게시글 작성
 router.post('/', verifyToken, async (req, res) => {
+  console.log(req.body);
   try {
     const post = await Post.create({
       title: req.body.title,
@@ -34,6 +36,39 @@ router.post('/', verifyToken, async (req, res) => {
     return res.sendStatus(500)
   }
 });
+
+// 모든 게시글 조회
+router.get('/all', verifyToken, async (req, res)=>{
+  try {
+    const postList = await Post.findAll({
+    })
+    return res.status(200).json({
+      data: postList,
+    }) 
+  } catch (error) {
+    return res.sendStatus(404);
+  }
+})
+
+// 게시글 상세 조회
+router.get('/all/:id',verifyToken, async (req, res)=>{
+  try {
+    const postDetail = await Post.findOne({
+      where: {id: req.params.id}
+    })
+    if(!postDetail){
+      return res.sendStatus(400);
+    }
+    return res.status(200).json({
+      data: postDetail,
+    })
+  } catch (error) {
+    return res.sendStatus(404);
+  }
+})
+
+
+
 
 
 // 카테고리: 식사 eat

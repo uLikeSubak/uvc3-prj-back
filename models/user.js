@@ -7,10 +7,10 @@ class User extends Sequelize.Model {
     return super.init(
       {
         // 첫번째 객체 인수는 테이블 필드에 대한 설정
-        userId: {
+        id: {
           type: Sequelize.STRING(30),
           allowNull: false,
-          unique: true,
+          primaryKey:true,
         },
         password: {
           type: Sequelize.STRING(100),

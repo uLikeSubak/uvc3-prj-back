@@ -9,26 +9,26 @@ const { verifyToken } = require('./middlewares');
 // 내 친구 목록 조회 
 
 router.get('/list', verifyToken, async(req, res)=>{
-  const friendList1 = await Friend.findAll({
+  const friendInfoList = [];
+ friendInfoList.push(await Friend.findAll({
     where:{
       status: true,
       reqUserId: req.decoded.id,
     }
-  })
-  const friendInfoList = [];
-  for(let i =0; i < friendList1.length; i++){
-    friendInfoList.push(await User.findOne({where:{id: friendList1[i].resUserId}}))
-  }
+  }))
+  // for(let i =0; i < friendList1.length; i++){
+  //   friendInfoList.push(await User.findOne({where:{id: friendList1[i].resUserId}}))
+  // }
 
-  const friendList2 = await Friend.findAll({
+  friendInfoList.push(await Friend.findAll({
     where:{
       status: true,
       resUserId: req.decoded.id,
     }
-  }) 
-  for(let i =0; i < friendList2.length; i++){
-    friendInfoList.push(await User.findOne({where:{id: friendList2[i].reqUserId}}))
-  }
+  }))
+  // for(let i =0; i < friendList2.length; i++){
+  //   friendInfoList.push(await User.findOne({where:{id: friendList2[i].reqUserId}}))
+  // }
   try {
     return res.status(200).json({
       friendInfoList,

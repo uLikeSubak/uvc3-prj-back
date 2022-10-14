@@ -18,15 +18,16 @@ const User = require('../models/user');
 
 // 화원가입 api
 router.post('/signUp', async (req, res) => {
-  const { name, email, userId, password, birthdate, gender, photoUrl, profileMessage } = req.body;
-  console.log(req.body);
+  const { name, email, id, password, birthdate, gender, photoUrl, profileMessage } = req.body;
+  // console.log(req.body);
   try {
+    console.log(req.body);
     // 비밀번호 암호화 
     const hash = await bcrypt.hash(password, 12);
     // 간단하게 회원가입 구현이라 email, authCode, status는 제외 했습니다.
     await User.create({
       name,
-      userId,
+      id,
       password: hash,
       email,
       birthdate,
@@ -69,7 +70,7 @@ router.get('/emailChk/:id', async (req, res) => {
 // 회원가입 시 닉네임 겸 ID 중복확인
 router.get('/userIdChk/:id', async (req, res) => {
   try {
-    const isDupUserId = await User.findOne({ where: { userId: req.params.id } });
+    const isDupUserId = await User.findOne({ where: { id: req.params.id } });
     // isDupUserId : 입력한 닉네임(Id)이 db에 있으면 값이 담긴다.
     if (isDupUserId) {
       // 중복된 닉네임(ID)이 있으면 400(Bad Request)
@@ -86,9 +87,9 @@ router.get('/userIdChk/:id', async (req, res) => {
 
 // 로그인 api
 router.post('/signIn', async (req, res) => {
-  const { userId, password } = req.body;
-  console.log(userId, password);
-  const validId = await User.findOne({ where: { userId } });
+  const { id, password } = req.body;
+  console.log(id, password);
+  const validId = await User.findOne({ where: { id } });
   try {
     // 클라이언트가 입력한 ID의 유효성 체크
     if (!validId) {

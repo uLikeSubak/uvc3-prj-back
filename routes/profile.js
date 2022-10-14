@@ -36,7 +36,7 @@ router.post('/my', verifyToken, async(req, res)=>{
 
 router.get('/:id', verifyToken, async(req, res)=>{
   try {
-    const userProfile = await User.findOne({where:{userId: req.params.id}})
+    const userProfile = await User.findOne({where:{id: req.params.id}})
     if(userProfile){
       return res.status(200).json({
         success: true,
@@ -54,18 +54,21 @@ router.get('/:id', verifyToken, async(req, res)=>{
 
 router.patch('/my', verifyToken, async(req, res)=>{
   const { photoUrl, profileMessage} = req.body;
+  console.log(req.body);
+  console.log(profileMessage);
   try {
     await User.update(
       {
-      photoUrl,
-      profileMessage,
+      profileMessage: profileMessage,
+      photoUrl: photoUrl,
       },
       {
         where:{
-          userId: req.decoded.id
+          id: req.decoded.id
         }
       },
     )
+    console.log("then here?")
     return res.sendStatus(200);
   }catch (error) {
     return res.sendStatus(400);
@@ -80,7 +83,7 @@ router.patch('/my', verifyToken, async(req, res)=>{
 
 router.delete('/:id', verifyToken, async(req, res)=>{
   try {
-    await User.destroy({where:{userId: req.decoded.id}})
+    await User.destroy({where:{id: req.decoded.id}})
     res.sendStatus(200);
   } catch (error) {
     res.sendStatus(404);
