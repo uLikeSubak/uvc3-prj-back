@@ -10,26 +10,26 @@ const { verifyToken } = require('./middlewares');
 
 router.get('/list', verifyToken, async(req, res)=>{
   const friendInfoList = [];
- friendInfoList.push(await Friend.findAll({
+  const friendList1 = await Friend.findAll({
     where:{
       status: true,
       reqUserId: req.decoded.id,
     }
-  }))
-  // for(let i =0; i < friendList1.length; i++){
-  //   friendInfoList.push(await User.findOne({where:{id: friendList1[i].resUserId}}))
-  // }
-
-  friendInfoList.push(await Friend.findAll({
-    where:{
-      status: true,
-      resUserId: req.decoded.id,
-    }
-  }))
-  // for(let i =0; i < friendList2.length; i++){
-  //   friendInfoList.push(await User.findOne({where:{id: friendList2[i].reqUserId}}))
-  // }
-  try {
+  })
+  for(let i =0; i < friendList1.length; i++){
+      friendInfoList.push(await User.findOne({where:{id: friendList1[i].resUserId}}))
+  }
+    
+   const friendList2 = await Friend.findAll({
+      where:{
+        status: true,
+        resUserId: req.decoded.id,
+      }
+    })
+    for(let i =0; i < friendList2.length; i++){
+        friendInfoList.push(await User.findOne({where:{id: friendList2[i].reqUserId}}))
+      }
+    try {
     return res.status(200).json({
       friendInfoList,
     })
@@ -55,6 +55,20 @@ router.get('/list', verifyToken, async(req, res)=>{
         status: false,
       }
     })
+    const areWeFriend1 = await Friend.findOne({
+      where:{
+        status: true,
+        reqUserId: req.params.userId,
+        resUserId: req.decoded.id,
+      }
+    })
+    const areWeFriend2 = await Friend.findOne({
+      where:{
+        status: true,
+        reqUserId: req.decoded.id,
+        resUserId: req.params.userId,
+      }
+    })  
     try {
         // 내가 요청자이면서 아직 친구가 아니라면  
       if(iamReqUser){
@@ -66,6 +80,14 @@ router.get('/list', verifyToken, async(req, res)=>{
         return res.status(200).json({
           message: "상대방 요청 내가 아직 수락x"
         });
+      }else if(areWeFriend1 || areWeFriend2){
+        return res.status(200).json({
+          message:"우린친구"
+         })
+      }else{
+        return res.status(200).json({
+          message: "아무 관계 아님"
+        });
       }
     } catch (error) {
       return res. sendStatus(404);
@@ -74,20 +96,20 @@ router.get('/list', verifyToken, async(req, res)=>{
 
 // // status가 1이면서 로그인 한 유저가 포함된 것 
 // router.get("/:userId/status/accepted", verifyToken, async(req, res)=>{
-//   const areWeFriend1 = await Friend.findOne({
-//     where:{
-//       status: true,
-//       reqUserId: req.params.userId,
-//       resUserId: req.decoded.id,
-//     }
-//   })
-//   const areWeFriend2 = await Friend.findOne({
-//     where:{
-//       status: true,
-//       reqUserId: req.decoded.id,
-//       resUserId: req.params.userId,
-//     }
-//   })   
+  // const areWeFriend1 = await Friend.findOne({
+  //   where:{
+  //     status: true,
+  //     reqUserId: req.params.userId,
+  //     resUserId: req.decoded.id,
+  //   }
+  // })
+  // const areWeFriend2 = await Friend.findOne({
+  //   where:{
+  //     status: true,
+  //     reqUserId: req.decoded.id,
+  //     resUserId: req.params.userId,
+  //   }
+  // })   
 //   try {
 //     if(areWeFriend1 || areWeFriend2){
 //       return res.status(200).json({
@@ -124,10 +146,13 @@ router.get('/:id', verifyToken, async(req, res)=>{
 
 
 
-// 친구 추가 
+// 친구 요청 
 
 router.post('/:id', verifyToken, async(req, res)=>{
   try {
+    console.log("타니?")
+    console.log(req.decoded.id)
+    console.log(req.params.id)
     await Friend.create({
       reqUserId: req.decoded.id,
       resUserId: req.params.id,
