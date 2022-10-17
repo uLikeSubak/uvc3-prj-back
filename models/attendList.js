@@ -10,7 +10,7 @@ class AttendList extends Sequelize.Model {
         status: {
           type: Sequelize.BOOLEAN,
           allowNull: false,
-          defaultValue: false,
+          defaultValue: false, // 신청하는대로 바로 참석확정자로 인정
         },
       },
       {

@@ -7,7 +7,7 @@ const { reset } = require('nodemon');
 const router = express.Router();
 
 // 모델 선언
-const { Post, User } = require('../models');
+const { Post } = require('../models');
 
 // 토큰 선언
 const { verifyToken } = require('./middlewares');
@@ -37,26 +37,43 @@ router.post('/', verifyToken, async (req, res) => {
   }
 });
 
+
 // 모든 게시글 조회
-router.get('/all', verifyToken, async (req, res)=>{
+router.get('/all', verifyToken, async (req, res) => {
   try {
     const postList = await Post.findAll({
     })
     return res.status(200).json({
       data: postList,
-    }) 
+    })
+  } catch (error) {
+    return res.sendStatus(404);
+  }
+})
+
+// 내가 쓴 게시글 조회
+router.get('/my', verifyToken, async (req, res) => {
+  try {
+    const myPostList = await Post.findAll({
+      where: {
+        UserId: req.decoded.id,
+      }
+    })
+    return res.status(200).json({
+      myPostList,
+    })
   } catch (error) {
     return res.sendStatus(404);
   }
 })
 
 // 게시글 상세 조회
-router.get('/all/:id',verifyToken, async (req, res)=>{
+router.get('/all/:id', verifyToken, async (req, res) => {
   try {
     const postDetail = await Post.findOne({
-      where: {id: req.params.id}
+      where: { id: req.params.id }
     })
-    if(!postDetail){
+    if (!postDetail) {
       return res.sendStatus(400);
     }
     return res.status(200).json({
@@ -68,6 +85,20 @@ router.get('/all/:id',verifyToken, async (req, res)=>{
 })
 
 
+// // // 게시글 상세 - 카운터 추가
+// router.patch('/all/:id', verifyToken, async (req, res) => {
+//   try {
+//     await Post.update({
+//       count: count + 1,
+//     }, {
+//       where: { id: req.params.id }
+//     })
+//     console.log(count);
+//     return res.sendStatus(201);
+//   } catch (error) {
+//     return res.sendStatus(404);
+//   }
+// })
 
 
 
