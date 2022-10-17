@@ -1,5 +1,7 @@
 // express 선언
 const express = require('express');
+const multer = require('multer');
+const path = require('path');
 
 // jwt 선언
 const { verifyToken } = require('./middlewares')
@@ -52,15 +54,32 @@ router.get('/:id', verifyToken, async(req, res)=>{
 
 // 회원 정보 수정
 
-router.patch('/my', verifyToken, async(req, res)=>{
-  const { photoUrl, profileMessage} = req.body;
-  console.log(req.body);
-  console.log(profileMessage);
+const upload = multer({
+  storage: multer.diskStorage({
+    destination(req, file, cb) {
+      cb(null, 'uploads/');
+    },
+    filename(req, file, cb) {
+      const ext = path.extname(file.originalname);
+      cb(null, path.basename(file.originalname, ext) + Date.now() + ext);
+    },
+  }),
+  limits: { fileSize: 8 * 1024 * 1024 },
+});
+
+
+
+
+router.patch('/my', verifyToken, upload.single('img'), async(req, res)=>{
+  console.log("req.file:", req.file);
+  const { profileMessage } = req.body;
+  console.log("req.body: ", req.body);
+  
   try {
     await User.update(
       {
       profileMessage: profileMessage,
-      photoUrl: photoUrl,
+      photoUrl: `/img/${req.file.filename}`,
       },
       {
         where:{
@@ -68,7 +87,6 @@ router.patch('/my', verifyToken, async(req, res)=>{
         }
       },
     )
-    console.log("then here?")
     return res.sendStatus(200);
   }catch (error) {
     return res.sendStatus(400);
