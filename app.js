@@ -4,6 +4,7 @@ const session = require('express-session');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
 const path = require('path');
+const cookieParser = require('cookie-parser');
 // const passportConfig = require('./passport')
 const { sequelize } = require('./models');
 const cors = require('cors');
@@ -29,7 +30,7 @@ dotenv.config();
 // .env에 포트 설정
 app.set('port', process.env.PORT)
 app.use(cors(corsConfig)); // cors설정
-
+app.use(cookieParser());
 
 //cors설정
 app.use(morgan('dev'));

@@ -12,8 +12,7 @@ const router = express.Router();
 
 // 모델 선언
 const User = require('../models/user');
-
-
+const { verifyToken } = require('./middlewares');
 
 
 // 화원가입 api
@@ -89,6 +88,7 @@ router.get('/userIdChk/:id', async (req, res) => {
 router.post('/signIn', async (req, res) => {
   const { id, password } = req.body;
   console.log(id, password);
+  // id = id.toLowerCase();
   const validId = await User.findOne({ where: { id } });
   try {
     // 클라이언트가 입력한 ID의 유효성 체크
@@ -104,6 +104,9 @@ router.post('/signIn', async (req, res) => {
         expiresIn: '30000m', // 테스트용이여서 일단 길게 했습니다. 
         issuer: 'todaymate',
       });
+      res.cookie('token', token, {
+        httpOnly: true
+      })
       console.log(token);
       return res.status(200).json({
         message: '토큰이 발급되었습니다',
@@ -114,6 +117,19 @@ router.post('/signIn', async (req, res) => {
       return res.sendStatus(400);
     }
   } catch (error) {
+    return res.sendStatus(404);
+  }
+})
+
+// 로그아웃 api
+router.get('/signOut', verifyToken, async (req, res) => {
+  try {
+    res.cookie('token', 'none', {
+      expires: new Date(Date.now() + 10 * 1000),
+      httpOnly: true
+    })
+    res.sendStatus(200);
+  } catch (Error) {
     return res.sendStatus(404);
   }
 })
