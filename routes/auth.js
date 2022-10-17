@@ -124,7 +124,7 @@ router.post('/signIn', async (req, res) => {
 // 로그아웃 api
 router.get('/signOut', verifyToken, async (req, res) => {
   try {
-    res.cookie('token', 'none', {
+    res.cookie('token', null, {
       expires: new Date(Date.now() + 10 * 1000),
       httpOnly: true
     })
