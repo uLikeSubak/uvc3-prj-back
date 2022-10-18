@@ -123,7 +123,8 @@ router.get('/eat', verifyToken, async (req, res) => {
 // 카테고리: 식사 eat
 // PATCH로 eat게시글 수정 (단, 유저가 쓴 것만)
 // router의 id는 post의 id
-router.patch('/eat/:id', verifyToken, async (req, res) => {
+router.patch('/all/:id', verifyToken, async (req, res) => {
+  console.log(req.params.id);
   try {
     await Post.update({
       title: req.body.title,

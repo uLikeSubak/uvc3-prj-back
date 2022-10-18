@@ -14,10 +14,14 @@ const router = express.Router();
 const User = require('../models/user');
 const { verifyToken } = require('./middlewares');
 
+// passport 선언
+const passport = require('passport');
+
+
 
 // 화원가입 api
 router.post('/signUp', async (req, res) => {
-  const { name, email, id, password, birthdate, gender, photoUrl, profileMessage } = req.body;
+  const { name, email, id, nick, password, birthdate, gender, photoUrl, profileMessage } = req.body;
   // console.log(req.body);
   try {
     console.log(req.body);
@@ -35,7 +39,6 @@ router.post('/signUp', async (req, res) => {
       nick,
       photoUrl,
       profileMessage,
-      provider,
     });
     // 유저정보가 성공적으로 만들어졌다면 201(Created)
     return res.sendStatus(201);
@@ -138,160 +141,33 @@ router.get('/signOut', verifyToken, async (req, res) => {
 })
 
 // 구글 로그인 api
-router.get('/google', passsport.authenticate('google', { sccope: ['profile','email']}));
+router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
 router.get(
   '/google/callback',
-  passport.authenticate('google', { failureRedirect: '/'}),
+  passport.authenticate('google', { failureRedirect: '/' }),
   (req, res) => {
     res.redirect('/');
   }
-  )
+)
 
 
-// 네이버 로그인 api
-router.post('/', async function (req, res, next) {
+// 네이버로 로그인
+router.get('/naver', passport.authenticate('naver', { authType: 'reprompt' }));
 
-  var code = req.body.code;
-  var state = req.body.state;
-
-
-  if (!code || !state) {
-    res.send(JSON.stringify({ result: 'false' }));
-  } else {
-    try {
-      var client_id = 'XidCe260VgSnQTw99lYJ';
-      var client_secret = 'AaFOJIiWpk';
-      var api_url = null;
-      api_url = 'https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&client_id='
-        + client_id + '&client_secret=' + client_secret + '&code=' + code + '&state=' + state;
-
-      var request = require('request');
-
-      var options = {
-        url: api_url,
-        headers: { 'X-Naver-Client-Id': client_id, 'X-Naver-Client-Secret': client_secret }
-      };
-
-      //토큰검사 request
-      request.get(options, function (error, response, body) {
-        if (!error && response.statusCode == 200) {
-
-
-
-          const obj = JSON.parse(body);//body가 String이기 때문에 json으로 파싱
-          //값이 궁금하면 body console 찍어보기
-
-
-          var api_url1 = 'https://openapi.naver.com/v1/nid/me';
-          var token = obj.access_token;
-          var header = "Bearer " + token; // Bearer 다음에 공백 추가
-          var options1 = {
-            url: api_url1,
-            headers: { 'Authorization': header }
-          };
-
-          var request1 = require('request');
-
-          //토큰을 이용해 이용자 정보 가져오기 request
-          request1.get(options1, async function (error, response, body1) {
-            if (!error && response.statusCode == 200) {
-
-
-              const result = JSON.parse(body1);
-              console.log(typeof result.response)
-
-              if (result.message == 'success') {
-                //success면 이용자 정보 가져오기 성공
-                var email = result.response.email;
-
-
-              } else {
-                //result fail
-                res.send(JSON.stringify({ result: `error` }));
-              }
-
-            } else {
-              console.log('error');
-              if (response != null) {
-                res.status(response.statusCode).end();
-                console.log('error = ' + response.statusCode);
-              }
-            }
-          });
-
-        } else {
-          res.send(JSON.stringify({ result: `error` }));
-        }
-      });
-
-    } catch (err) {
-      res.send(JSON.stringify({ result: "error" }));
-      console.log("Query Error : " + err);
-      throw err;
-    }
-  }
-
-});
+//? 네이버 서버 로그인이 되면, 네이버 redirect url 설정에 따라 아래 라우터로 오게 한다
+router.get(
+  'naver/callback',
+  //? passport 로그인 전략에 의해 naverStrategy로 가서 카카오계정 정보와 db를 비교해서 회원가입시키거나 로그인 처리하게 한다
+  passport.authenticate('naver', { failureRedirect: '/' }),
+  (req, res) => {
+    res.redirect('/');
+  },
+);
 
 
 
 
-
-
-
-
-/**
- router.post('/signIn-Naver', async (req, res) {
-  const code = req.body.code;
-  const state = req.body.state;
-  api_url = 'https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&client_id='
-       + 'XidCe260VgSnQTw99lYJ' + '&client_secret=' + 'AaFOJIiWpk' + '&code=' + code + '&state=' + state;
-  const request = rqeuire('request');
-  const options = {
-    url: api_url,
-    headers: {'X-Naver-Client-Id':XidCe260VgSnQTw99lYJ, 'X-Naver-Client-Secret':AaFOJIiWpk};
-    request.get(options, function {error, response, body} {
-      if(!error && response.statusCode == 200) {
-        res.writeHeader(200, {'Content-Type':: 'text/json;charset=utf-8'});
-        res.end(body);
-      } else {
-        res.status(response.statusCode).end();
-        console.log('error = ' + response.statusCode);
-      }
-    });
- })
- * 
- 
- router.post('/signIn-NaverMember', async (req, res) => {
-  const api_url = "https://openapi.naver.com/v1/nid/me";
-  const request = require('request');
-  const token - req.body.token;
-  const header = "Bearer " + token;
-  const options = {
-    url: api_url,
-    headers: { 'Authorization': header }
-  };
-  try {
-    request.get(options, function(error, response, body) {
-      if (!error && response.statusCode == 200) {
-        res.writeHead(200, {'Content-Type': 'text/json;charset=utf-8'});
-        res.end(body);
-  } catch (Error)
-      if(response != null) {
-        res.status(response.statusCode).end();
-        console.log('error =' + response.statusCode);
-  }
- })
- */
-
-// const naverLogin = new naver.LoginWithNaverId(
-//   {
-//     clientId: "XidCe260VgSnQTw99lYJ",
-//     callbackUrl: "AaFOJIiWpk",
-//   }
-// );
-// naverLogin.init(); // 로그인 설정
 
 
 
