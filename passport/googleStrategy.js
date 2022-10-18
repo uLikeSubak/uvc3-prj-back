@@ -16,7 +16,7 @@ module.exports = () => {
         console.log('google profile : ', profile);
         try{
           const exUser = await User.findOne({
-            where: { snsId: profile.id, provider: 'google' },
+            where: { id: profile.id, provider: 'google' },
           });
           if (exUser){
             done(null, exUser);
