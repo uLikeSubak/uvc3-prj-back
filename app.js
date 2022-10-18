@@ -1,11 +1,11 @@
 const express = require('express');
 const session = require('express-session');
-// const passport = require('passport');
+const passport = require('passport');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
 const path = require('path');
 const cookieParser = require('cookie-parser');
-// const passportConfig = require('./passport')
+const passportConfig = require('./passport')
 const { sequelize } = require('./models');
 const cors = require('cors');
 const corsConfig = require('./config/corsConfig');
@@ -25,7 +25,7 @@ const friendRouter = require('./routes/friend.js')
 
 
 dotenv.config();
-// passportConfig()
+passportConfig()
 
 // .env에 포트 설정
 app.set('port', process.env.PORT)
