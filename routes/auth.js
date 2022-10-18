@@ -137,6 +137,17 @@ router.get('/signOut', verifyToken, async (req, res) => {
   }
 })
 
+// 구글 로그인 api
+router.get('/google', passsport.authenticate('google', { sccope: ['profile','email']}));
+
+router.get(
+  '/google/callback',
+  passport.authenticate('google', { failureRedirect: '/'}),
+  (req, res) => {
+    res.redirect('/');
+  }
+  )
+
 
 // 네이버 로그인 api
 router.post('/', async function (req, res, next) {
