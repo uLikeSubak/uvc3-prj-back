@@ -33,6 +33,11 @@ class User extends Sequelize.Model {
           type: Sequelize.STRING(40),
           allowNull: false,
         },
+        nick: {
+          type: Sequelize.STRING(40),
+          allowNull: false,
+          defaultValue: '뽀로로ㅋ'
+        },
         photoUrl: {
           type: Sequelize.STRING,
           allowNull: true,
@@ -42,6 +47,11 @@ class User extends Sequelize.Model {
           type: Sequelize.STRING,
           allowNull: true,
         },
+        provider: {
+          type: Sequelize.STRING(200),
+          allowNull: false,
+          defaultValue: 'Local' // *기본 로컬로그인 환경으로 디폴트 설정
+        }
       },
       {
         // 두번째 객체 인수는 테이블 자체에 대한 설정
