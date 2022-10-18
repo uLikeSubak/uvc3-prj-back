@@ -7,14 +7,14 @@ const { reset } = require('nodemon');
 const router = express.Router();
 
 // 모델 선언
-const { Post } = require('../models');
+const { Post, AttendList } = require('../models');
 
 // 토큰 선언
 const { verifyToken } = require('./middlewares');
 
 // 식사 eat / 운동 exercise / 스터디 study / 공구 buy / 재능기부 talent
 
-// POST으로 eat게시글 작성
+// POST으로 게시글 작성
 router.post('/', verifyToken, async (req, res) => {
   console.log(req.body);
   try {
@@ -31,6 +31,12 @@ router.post('/', verifyToken, async (req, res) => {
       UserId: req.decoded.id,
       CategoryId: req.body.CategoryId,
     });
+    // console.log(post.id);
+    const myattend = await AttendList.create({
+      status: true,
+      UserId: post.UserId,
+      PostId: post.id,
+    })
     return res.sendStatus(201)
   } catch (error) {
     return res.sendStatus(500)
@@ -120,8 +126,7 @@ router.get('/eat', verifyToken, async (req, res) => {
 });
 
 
-// 카테고리: 식사 eat
-// PATCH로 eat게시글 수정 (단, 유저가 쓴 것만)
+// PATCH로 게시글 수정 (단, 유저가 쓴 것만)
 // router의 id는 post의 id
 router.patch('/all/:id', verifyToken, async (req, res) => {
   console.log(req.params.id);
@@ -134,6 +139,7 @@ router.patch('/all/:id', verifyToken, async (req, res) => {
       cost: req.body.cost,
       capacity: req.body.capacity,
       date: req.body.date,
+      time: req.body.time,
       visibility: req.body.visibility,
     }, { where: { id: req.params.id, UserId: req.decoded.id } })
     return res.sendStatus(200);
@@ -142,9 +148,8 @@ router.patch('/all/:id', verifyToken, async (req, res) => {
   }
 })
 
-// 카테고리: 식사 eat
-// DELETE으로 eat게시글 삭제 (단, 유저가 쓴 것만)
-router.delete('/eat/:id', verifyToken, async (req, res) => {
+// DELETE으로 게시글 삭제 (단, 유저가 쓴 것만)
+router.delete('/all/:id', verifyToken, async (req, res) => {
   try {
     await Post.destroy({ where: { id: req.params.id, UserId: req.decoded.id } })
     res.sendStatus(204);

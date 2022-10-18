@@ -5,7 +5,7 @@ const express = require('express');
 const router = express.Router();
 
 // 모델 선언
-const { AttendList, Post } = require('../models');
+const { AttendList, Post, User } = require('../models');
 const { count } = require('../models/post');
 
 // 토큰 선언
@@ -17,27 +17,95 @@ const { verifyToken } = require('./middlewares');
 router.get('/:postId/acceptlist', verifyToken, async (req, res) => {
   try {
     const acceptlist = await AttendList.findAll({
-      where: { PostId: req.params.postId, status: true },
-      order: [['createdAt', 'DESC']],
+      where: { PostId: req.params.postId },
+      // order: [['createdAt', 'DESC']],
     });
+    // console.log(acceptlist);
+    // console.log('hello');
     return res.status(200).json({
-      acceptlist,
-    })
+      acceptlist
+    });
   } catch (error) {
     return res.sendStatus(500);
   }
 });
 
+
+router.get('/:postId/acceptlist/:userId', verifyToken, async (req, res) => {
+  try {
+
+    const checkattend = await AttendList.findOne({
+      where: { PostId: req.params.postId, UserId: req.params.userId }
+    });
+    console.log(checkattend);
+    if (checkattend === null) {
+      return res.status(200).json({
+        success: 0
+      })
+    } else {
+      return res.status(200).json({
+        success: 1
+      })
+    }
+  } catch (error) {
+    return res.sendStatus(500);
+  }
+})
+/**
+     const comments = await Comment.findAll({
+      where: { PostId: req.params.id },
+      order: [['createdAt', 'DESC']],
+    });
+    return res.status(200).json({
+      comments
+    });
+ * 
+ * 
+ */
+
 // POST으로 신청자 목록에 신청
+// router.post('/:postId/acceptlist', verifyToken, async (req, res) => {
+//   try {
+//     await AttendList.create({
+//       content: req.body.content,
+//       status: true,
+//       UserId: req.decoded.id,
+//       PostId: req.params.postId,
+//     });
+//     return res.sendStatus(201);
+//   } catch (error) {
+//     return res.sendStatus(500);
+//   }
+// });
+
+// 게시글에서 신청하기
 router.post('/:postId/acceptlist', verifyToken, async (req, res) => {
   try {
-    await AttendList.create({
-      content: req.body.content,
-      status: true,
-      UserId: req.decoded.id,
-      PostId: req.params.postId,
+    // 이미 신청했는지 확인용 정보 불러오기
+    attending = AttendList.findOne({
+      where: {
+        status: true,
+        UserId: req.decoded.id,
+        PostId: req.params.postId,
+      }
+    })
+    // attendlist에 유저가 없을 경우에만 db에 생성
+    if (attending.UserId !== req.decoded.id) {
+      await AttendList.create({
+        // content: req.body.content,
+        status: true,
+        UserId: req.decoded.id,
+        PostId: req.params.postId,
+      })
+      console.log('now registered');
+    } else {
+      console.log(attending.PostId);
+      console.log('already registered');
+      // console.log(attending.status);
+    }
+    return res.status(201).json({
+      attending
     });
-    return res.sendStatus(201);
   } catch (error) {
     return res.sendStatus(500);
   }
