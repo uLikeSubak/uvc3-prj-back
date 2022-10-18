@@ -13,7 +13,11 @@ const router = express.Router();
 // 모델 선언
 const User = require('../models/user');
 const { verifyToken } = require('./middlewares');
+
+// passport 선언
 const passport = require('passport');
+
+
 
 // 화원가입 api
 router.post('/signUp', async (req, res) => {
@@ -137,15 +141,15 @@ router.get('/signOut', verifyToken, async (req, res) => {
 })
 
 // 구글 로그인 api
-router.get('/google', passsport.authenticate('google', { sccope: ['profile','email']}));
+router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
 router.get(
   '/google/callback',
-  passport.authenticate('google', { failureRedirect: '/'}),
+  passport.authenticate('google', { failureRedirect: '/' }),
   (req, res) => {
     res.redirect('/');
   }
-  )
+)
 
 
 // 네이버로 로그인

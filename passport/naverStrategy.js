@@ -1,5 +1,5 @@
 const passport = require('passport');
-const { Strategy: NaverStrategy, Profile: NaverProfile } = rqeuire('passport-naver-v2');
+const { Strategy: NaverStrategy, Profile: NaverProfile } = require('passport-naver-v2');
 
 const User = require('../models/user');
 

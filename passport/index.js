@@ -1,7 +1,7 @@
-const passport = require('passpor');
-const local = require('./localStrategy');
-const google = require('./googleStrategy');
-
+const passport = require('passport');
+// const local = require('./localStrategy');
+const google = require('./googleStrategy'); // 구글서버 로그인
+const naver = require('./naverStrategy'); // 네이버서버 로그인
 const User = require('../models/user');
 
 module.exports = () => {
@@ -17,7 +17,8 @@ module.exports = () => {
       .catch(err => done(err));
   });
 
-  local();
+  // local();
   google();
+  naver();
 
 }
