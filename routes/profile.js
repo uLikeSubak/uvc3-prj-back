@@ -111,8 +111,6 @@ router.patch('/my', verifyToken, upload.single('img'), async (req, res) => {
 
 
 
-
-
 // 회원 정보 삭제
 
 router.delete('/:id', verifyToken, async (req, res) => {

@@ -1,5 +1,5 @@
 const express = require('express');
-const session = require('express-session');
+// const session = require('express-session');
 const passport = require('passport');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
@@ -11,10 +11,9 @@ const cors = require('cors');
 const corsConfig = require('./config/corsConfig');
 // const corsConfig = require('./config/corsConfig.json');
 // const logger = require('./lib/logger');
-
+const NaverStrategy = require('./passport/naverStrategy').Strategy
 
 const app = express();
-
 const authRouter = require('./routes/auth.js')
 const postRouter = require('./routes/post.js')
 const profileRouter = require('./routes/profile.js')
@@ -34,6 +33,11 @@ app.use(cookieParser());
 
 //cors설정
 app.use(morgan('dev'));
+
+// passport 설정
+app.use(passport.initialize());
+// app.use(passport.session());
+// app.use(session);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
