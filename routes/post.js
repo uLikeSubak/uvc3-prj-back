@@ -64,6 +64,7 @@ router.get('/my', verifyToken, async (req, res) => {
         UserId: req.decoded.id,
       }
     })
+    
     return res.status(200).json({
       myPostList,
     })
