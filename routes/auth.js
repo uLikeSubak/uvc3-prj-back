@@ -17,7 +17,7 @@ const { verifyToken } = require('./middlewares');
 // passport 선언
 const passport = require('passport');
 const { request } = require('express');
-const requestP = require('request-promise');
+
 
 
 // 화원가입 api
