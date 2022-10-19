@@ -12,7 +12,46 @@ const router = express.Router();
 
 // 모델 선언
 const User = require('../models/user');
+const AttendList = require('../models/attendList')
+const Post = require('../models/post')
 const { Router } = require('express');
+
+
+
+//게시글 기록(history)
+
+router.get('/myattend', verifyToken, async(req, res)=>{
+  console.log(req.decoded.id);
+  try {
+    console.log(1)
+    //attend list에서 아이디를 찾음
+    const myPostList = await AttendList.findAll({
+      where: {
+        UserId: req.decoded.id,
+      }
+    })
+    console.log(myPostList);
+    console.log(2)
+    const myHistoryList=[];
+    //post에서 일치하는 아이디를 찾음
+    for(let i=0;i<myPostList.length;i++){
+      myHistoryList[i] = await Post.findOne({
+        where: {        
+          id: myPostList[i].PostId,
+        }
+      })
+    }
+    console.log(3)
+    console.log(4,myHistoryList);
+    return res.status(200).json({
+      myHistoryList,
+    })
+  } catch (error) {
+    return res.sendStatus(500)
+  }
+})
+
+
 
 
 // 내 정보 조회
@@ -121,5 +160,7 @@ router.delete('/:id', verifyToken, async (req, res) => {
     res.sendStatus(404);
   }
 })
+
+
 
 module.exports = router;
