@@ -141,11 +141,14 @@ router.get('/signOut', verifyToken, async (req, res) => {
 })
 
 // 구글 로그인 api
-router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+router.get('/google', 
+  passport.authenticate('google',{
+     scope: ['profile', 'email'] 
+    }));
 
 router.get(
   '/google/callback',
-  passport.authenticate('google', { failureRedirect: '/' }),
+  passport.authenticate('google', { failureRedirect: '/'}),
   (req, res) => {
     res.redirect('/');
   }
@@ -164,12 +167,5 @@ router.get(
     res.redirect('/');
   },
 );
-
-
-
-
-
-
-
 
 module.exports = router;
