@@ -71,22 +71,36 @@ const upload = multer({
 
 
 router.patch('/my', verifyToken, upload.single('img'), async (req, res) => {
-  console.log("req.file:", req.file);
-  const { profileMessage } = req.body;
-  console.log("req.body: ", req.body);
-
+  const { profileMessage, photoUrl } = req.body;
+  console.log(2, photoUrl);
+  console.log(3, profileMessage);
   try {
+    if(photoUrl || profileMessage){
+      await User.update(
+      {
+        profileMessage: profileMessage,
+        photoUrl,
+      },
+      {
+        where:{
+          id: req.decoded.id
+        }
+      },
+      )
+    }
+    else{
     await User.update(
       {
         profileMessage: profileMessage,
-        photoUrl: `/img/${req.file.filename}`,
+        photoUrl: `/img/${req.file.filename}` || photoUrl ,
       },
       {
         where: {
           id: req.decoded.id
         }
       },
-    )
+     )
+    }
     return res.sendStatus(200);
   } catch (error) {
     return res.sendStatus(400);
