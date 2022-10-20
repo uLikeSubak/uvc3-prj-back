@@ -28,7 +28,6 @@ router.post('/', verifyToken, async (req, res) => {
       capacity: req.body.capacity,
       date: req.body.date,
       time: req.body.time,
-      visibility: req.body.visibility,
       UserId: req.decoded.id,
       CategoryId: req.body.CategoryId,
     });
@@ -66,6 +65,7 @@ router.get('/my', verifyToken, async (req, res) => {
         UserId: req.decoded.id,
       }
     })
+    
     return res.status(200).json({
       myPostList,
     })
@@ -176,7 +176,6 @@ router.patch('/all/:id', verifyToken, async (req, res) => {
       capacity: req.body.capacity,
       date: req.body.date,
       time: req.body.time,
-      visibility: req.body.visibility,
     }, { where: { id: req.params.id, UserId: req.decoded.id } })
     return res.sendStatus(200);
   } catch (error) {
@@ -227,7 +226,6 @@ router.patch('/exercise/:id', verifyToken, async (req, res) => {
       cost: req.body.cost,
       capacity: req.body.capacity,
       date: req.body.date,
-      visibility: req.body.visibility,
     }, { where: { id: req.params.id, UserId: req.decoded.id } })
     return res.sendStatus(200);
   } catch (error) {
@@ -278,7 +276,6 @@ router.patch('/study/:id', verifyToken, async (req, res) => {
       cost: req.body.cost,
       capacity: req.body.capacity,
       date: req.body.date,
-      visibility: req.body.visibility,
     }, { where: { id: req.params.id, UserId: req.decoded.id } })
     return res.sendStatus(200);
   } catch (error) {
@@ -330,7 +327,6 @@ router.patch('/buy/:id', verifyToken, async (req, res) => {
       cost: req.body.cost,
       capacity: req.body.capacity,
       date: req.body.date,
-      visibility: req.body.visibility,
     }, { where: { id: req.params.id, UserId: req.decoded.id } })
     return res.sendStatus(200);
   } catch (error) {
@@ -382,7 +378,6 @@ router.patch('/talent/:id', verifyToken, async (req, res) => {
       cost: req.body.cost,
       capacity: req.body.capacity,
       date: req.body.date,
-      visibility: req.body.visibility,
     }, { where: { id: req.params.id, UserId: req.decoded.id } })
     return res.sendStatus(200);
   } catch (error) {
