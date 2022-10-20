@@ -46,11 +46,23 @@ router.post('/', verifyToken, async (req, res) => {
 
 // 모든 게시글 조회
 router.get('/all', verifyToken, async (req, res) => {
+  // const attendList = []
+
   try {
     const postList = await Post.findAll({
     })
+
+    // for (item in postList) {
+    //   const attendone = await AttendList.findOne({
+    //     where: { PostId: postList[item].id }
+    //   })
+    //   attendList.push(attendone);
+    // }
+    // console.log(attendList);
+    // const attendList = await AttendList.findAll({
+    // })
     return res.status(200).json({
-      data: postList,
+      data: postList
     })
   } catch (error) {
     return res.sendStatus(404);
@@ -65,7 +77,7 @@ router.get('/my', verifyToken, async (req, res) => {
         UserId: req.decoded.id,
       }
     })
-    
+
     return res.status(200).json({
       myPostList,
     })
@@ -93,29 +105,29 @@ router.get('/all/:id', verifyToken, async (req, res) => {
 
 // 게시글 작성자 정보 조회
 // id:게시글 아이디
-router.get('/:postId/writer', verifyToken, async (req, res)=>{
+router.get('/:postId/writer', verifyToken, async (req, res) => {
   console.log(1)
   try {
     console.log(2)
     const exPost = await Post.findOne({
-      where:{
+      where: {
         id: req.params.postId
       }
     })
     console.log(3)
     console.log(exPost.UserId);
     const writerInfo = await User.findOne({
-      where:{
+      where: {
         id: exPost.UserId,
       }
     })
     console.log(4)
-    if(writerInfo){
+    if (writerInfo) {
       console.log(5)
       return res.status(200).json({
         data: writerInfo,
       })
-    }else{
+    } else {
       console.log(6)
       return res.sendStatus(400);
     }
@@ -125,9 +137,7 @@ router.get('/:postId/writer', verifyToken, async (req, res)=>{
 })
 
 
-
-
-// // // 게시글 상세 - 카운터 추가
+// 게시글 상세 - 카운터 추가
 // router.patch('/all/:id', verifyToken, async (req, res) => {
 //   try {
 //     await Post.update({
@@ -141,7 +151,6 @@ router.get('/:postId/writer', verifyToken, async (req, res)=>{
 //     return res.sendStatus(404);
 //   }
 // })
-
 
 
 // 카테고리: 식사 eat
