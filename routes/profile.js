@@ -21,37 +21,40 @@ const { Router } = require('express');
 //게시글 기록(history)
 
 router.get('/myattend', verifyToken, async(req, res)=>{
-  console.log(req.decoded.id);
   try {
-    console.log(1)
     //attend list에서 아이디를 찾음
     const myPostList = await AttendList.findAll({
       where: {
         UserId: req.decoded.id,
       }
     })
-    console.log(myPostList);
-    console.log(2)
-    const myHistoryList=[];
+    
+    const myHistoryList_1=[];
     //post에서 일치하는 아이디를 찾음
-    for(let i=0;i<myPostList.length;i++){
-      myHistoryList[i] = await Post.findOne({
+    for(let i=0;i<myPostList.length;i++)
+      myHistoryList_1[i] = await Post.findOne({
         where: {        
           id: myPostList[i].PostId,
         }
-      })
+    })
+
+    const myHistoryList_2=[];
+  
+    let num=0;
+    for(let i =0;i<myHistoryList_1.length;i++){
+      if(myHistoryList_1[i].UserId!=req.decoded.id){
+        myHistoryList_2[num]=myHistoryList_1[i];
+        num++;
+      }
     }
-    console.log(3)
-    console.log(4,myHistoryList);
+
     return res.status(200).json({
-      myHistoryList,
+      myHistoryList_2,
     })
   } catch (error) {
     return res.sendStatus(500)
   }
 })
-
-
 
 
 // 내 정보 조회
