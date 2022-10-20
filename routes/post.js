@@ -7,7 +7,8 @@ const { reset } = require('nodemon');
 const router = express.Router();
 
 // 모델 선언
-const { Post, AttendList } = require('../models');
+const { Post, AttendList, User } = require('../models');
+const { findOne } = require('../models/user');
 
 // 토큰 선언
 const { verifyToken } = require('./middlewares');
@@ -27,7 +28,6 @@ router.post('/', verifyToken, async (req, res) => {
       capacity: req.body.capacity,
       date: req.body.date,
       time: req.body.time,
-      visibility: req.body.visibility,
       UserId: req.decoded.id,
       CategoryId: req.body.CategoryId,
     });
@@ -91,6 +91,41 @@ router.get('/all/:id', verifyToken, async (req, res) => {
   }
 })
 
+// 게시글 작성자 정보 조회
+// id:게시글 아이디
+router.get('/:postId/writer', verifyToken, async (req, res)=>{
+  console.log(1)
+  try {
+    console.log(2)
+    const exPost = await Post.findOne({
+      where:{
+        id: req.params.postId
+      }
+    })
+    console.log(3)
+    console.log(exPost.UserId);
+    const writerInfo = await User.findOne({
+      where:{
+        id: exPost.UserId,
+      }
+    })
+    console.log(4)
+    if(writerInfo){
+      console.log(5)
+      return res.status(200).json({
+        data: writerInfo,
+      })
+    }else{
+      console.log(6)
+      return res.sendStatus(400);
+    }
+  } catch (error) {
+    return res.sendStatus(404);
+  }
+})
+
+
+
 
 // // // 게시글 상세 - 카운터 추가
 // router.patch('/all/:id', verifyToken, async (req, res) => {
@@ -141,7 +176,6 @@ router.patch('/all/:id', verifyToken, async (req, res) => {
       capacity: req.body.capacity,
       date: req.body.date,
       time: req.body.time,
-      visibility: req.body.visibility,
     }, { where: { id: req.params.id, UserId: req.decoded.id } })
     return res.sendStatus(200);
   } catch (error) {
@@ -192,7 +226,6 @@ router.patch('/exercise/:id', verifyToken, async (req, res) => {
       cost: req.body.cost,
       capacity: req.body.capacity,
       date: req.body.date,
-      visibility: req.body.visibility,
     }, { where: { id: req.params.id, UserId: req.decoded.id } })
     return res.sendStatus(200);
   } catch (error) {
@@ -243,7 +276,6 @@ router.patch('/study/:id', verifyToken, async (req, res) => {
       cost: req.body.cost,
       capacity: req.body.capacity,
       date: req.body.date,
-      visibility: req.body.visibility,
     }, { where: { id: req.params.id, UserId: req.decoded.id } })
     return res.sendStatus(200);
   } catch (error) {
@@ -295,7 +327,6 @@ router.patch('/buy/:id', verifyToken, async (req, res) => {
       cost: req.body.cost,
       capacity: req.body.capacity,
       date: req.body.date,
-      visibility: req.body.visibility,
     }, { where: { id: req.params.id, UserId: req.decoded.id } })
     return res.sendStatus(200);
   } catch (error) {
@@ -347,7 +378,6 @@ router.patch('/talent/:id', verifyToken, async (req, res) => {
       cost: req.body.cost,
       capacity: req.body.capacity,
       date: req.body.date,
-      visibility: req.body.visibility,
     }, { where: { id: req.params.id, UserId: req.decoded.id } })
     return res.sendStatus(200);
   } catch (error) {
