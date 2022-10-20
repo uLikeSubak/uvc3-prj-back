@@ -53,9 +53,12 @@ router.post('/signUp', async (req, res) => {
 
 // 회원가입 시 이메일 중복확인
 // 라우터 주소 형식을 어떤 식으로 할 지 얘기를 한 번 해봐야할 거 같습니다.
-router.get('/emailChk/:id', async (req, res) => {
+router.post('/emailChk', async (req, res) => {
+  const { email } = req.body;
+  console.log(email);
+
   try {
-    const isDupEmail = await User.findOne({ where: { email: req.params.id } });
+    const isDupEmail = await User.findOne({ where: { email: req.body.email } });
     // isDupEmail : 입력한 이메일이 db에 있으면 값이 담긴다.
     if (isDupEmail) {
       // 중복된 이메일이 있으면 400(Bad Request)
@@ -73,9 +76,12 @@ router.get('/emailChk/:id', async (req, res) => {
 
 
 // 회원가입 시 닉네임 겸 ID 중복확인
-router.get('/userIdChk/:id', async (req, res) => {
+router.post('/userIdChk', async (req, res) => {
+  const { id } = req.body;
+  console.log(id);
+
   try {
-    const isDupUserId = await User.findOne({ where: { id: req.params.id } });
+    const isDupUserId = await User.findOne({ where: { id: req.body.id } });
     // isDupUserId : 입력한 닉네임(Id)이 db에 있으면 값이 담긴다.
     if (isDupUserId) {
       // 중복된 닉네임(ID)이 있으면 400(Bad Request)
