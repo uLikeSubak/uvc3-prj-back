@@ -22,7 +22,7 @@ const { request } = require('express');
 
 // 화원가입 api
 router.post('/signUp', async (req, res) => {
-  const { name, email, id, nick, password, birthdate, gender, photoUrl, profileMessage } = req.body;
+  const { name, email, id, password, birthdate, gender, photoUrl, profileMessage } = req.body;
   // console.log(req.body);
   try {
     console.log(req.body);
@@ -37,7 +37,6 @@ router.post('/signUp', async (req, res) => {
       birthdate,
       gender,
       name,
-      nick,
       photoUrl,
       profileMessage,
     });
@@ -124,6 +123,8 @@ router.post('/signIn', async (req, res) => {
         message: '토큰이 발급되었습니다',
         token,
         id,
+        data: validId.photoUrl,
+
       });
     } else {
       // 비밀번호 불일치 400(Bad Request)
