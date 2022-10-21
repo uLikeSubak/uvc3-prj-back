@@ -129,6 +129,7 @@ router.patch('/my', verifyToken, upload.single('img'), async (req, res) => {
           }
         },
       )
+      return res.sendStatus(200);
     }
     else {
       await User.update(
@@ -142,8 +143,10 @@ router.patch('/my', verifyToken, upload.single('img'), async (req, res) => {
           }
         },
       )
+      return res.status(200).json({
+        photoUrl: `/img/${req.file.filename}` || photoUrl,
+      });
     }
-    return res.sendStatus(200);
   } catch (error) {
     return res.sendStatus(400);
   }
