@@ -20,7 +20,7 @@ const { Router } = require('express');
 
 //게시글 기록(history)
 
-router.get('/myattend', verifyToken, async(req, res)=>{
+router.get('/myattend', verifyToken, async (req, res) => {
   try {
     //attend list에서 아이디를 찾음
     const myPostList = await AttendList.findAll({
@@ -28,22 +28,22 @@ router.get('/myattend', verifyToken, async(req, res)=>{
         UserId: req.decoded.id,
       }
     })
-    
-    const myHistoryList_1=[];
+
+    const myHistoryList_1 = [];
     //post에서 일치하는 아이디를 찾음
-    for(let i=0;i<myPostList.length;i++)
+    for (let i = 0; i < myPostList.length; i++)
       myHistoryList_1[i] = await Post.findOne({
-        where: {        
+        where: {
           id: myPostList[i].PostId,
         }
-    })
+      })
 
-    const myHistoryList_2=[];
-  
-    let num=0;
-    for(let i =0;i<myHistoryList_1.length;i++){
-      if(myHistoryList_1[i].UserId!=req.decoded.id){
-        myHistoryList_2[num]=myHistoryList_1[i];
+    const myHistoryList_2 = [];
+
+    let num = 0;
+    for (let i = 0; i < myHistoryList_1.length; i++) {
+      if (myHistoryList_1[i].UserId != req.decoded.id) {
+        myHistoryList_2[num] = myHistoryList_1[i];
         num++;
       }
     }
@@ -117,31 +117,31 @@ router.patch('/my', verifyToken, upload.single('img'), async (req, res) => {
   console.log(2, photoUrl);
   console.log(3, profileMessage);
   try {
-    if(photoUrl || profileMessage){
+    if (photoUrl || profileMessage) {
       await User.update(
-      {
-        profileMessage: profileMessage,
-        photoUrl,
-      },
-      {
-        where:{
-          id: req.decoded.id
-        }
-      },
+        {
+          profileMessage: profileMessage,
+          photoUrl,
+        },
+        {
+          where: {
+            id: req.decoded.id
+          }
+        },
       )
     }
-    else{
-    await User.update(
-      {
-        profileMessage: profileMessage,
-        photoUrl: `/img/${req.file.filename}` || photoUrl ,
-      },
-      {
-        where: {
-          id: req.decoded.id
-        }
-      },
-     )
+    else {
+      await User.update(
+        {
+          profileMessage: profileMessage,
+          photoUrl: `/img/${req.file.filename}` || photoUrl,
+        },
+        {
+          where: {
+            id: req.decoded.id
+          }
+        },
+      )
     }
     return res.sendStatus(200);
   } catch (error) {
