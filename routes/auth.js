@@ -149,5 +149,31 @@ router.get('/signOut', verifyToken, async (req, res) => {
 })
 
 
+//=============================혼자 할 것================================//
+
+// 회원가입 시 필요한 이메일 인증 절차 
+
+// 인증번호 전송 api 
+router.post('/sendCode', async (req, res)=>{
+  
+})
+
+
+// 인증번호 일치 확인
+router.get('/checkCode/:id', async (req, res)=>{
+
+})
+
+
+
+// 아이디 / 비밀번호 찾기 
+
+// 구글 로그인
+
+//  네이버 로그인
+
+//  카카오 로그인
+
+
 
 module.exports = router;
